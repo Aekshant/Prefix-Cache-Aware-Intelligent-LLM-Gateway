@@ -1,0 +1,13 @@
+# Build output
+/bin/
+*.exe
+*.test
+*.out
+
+# Editor / OS
+.idea/
+.vscode/
+.DS_Store
+
+# Local env
+.env

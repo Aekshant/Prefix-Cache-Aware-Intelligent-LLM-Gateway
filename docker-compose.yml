@@ -1,0 +1,45 @@
+services:
+  gateway:
+    build: .
+    image: llm-gateway:latest
+    ports:
+      - "8080:8080"
+    environment:
+      WORKERS: "worker-1=http://ollama-1:11434,worker-2=http://ollama-2:11434"
+      CACHE_TTL: "10m"
+      JANITOR_INTERVAL: "30s"
+      MAX_ACTIVE_CONNS: "5"
+      PREFIX_BYTES: "120"
+    depends_on:
+      - ollama-1
+      - ollama-2
+    restart: unless-stopped
+
+  ollama-1:
+    image: ollama/ollama:latest
+    volumes:
+      - ollama-models:/root/.ollama
+    ports:
+      - "11434:11434"
+    restart: unless-stopped
+
+  ollama-2:
+    image: ollama/ollama:latest
+    volumes:
+      - ollama-models:/root/.ollama
+    ports:
+      - "11435:11434"
+    restart: unless-stopped
+
+  prometheus:
+    image: prom/prometheus:latest
+    volumes:
+      - ./deploy/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    ports:
+      - "9090:9090"
+    depends_on:
+      - gateway
+    restart: unless-stopped
+
+volumes:
+  ollama-models:

@@ -1,0 +1,12 @@
+.git
+.gitignore
+.dockerignore
+Dockerfile
+docker-compose.yml
+deploy/
+bin/
+*.md
+*.test
+*.out
+.idea/
+.vscode/
